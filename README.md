@@ -1,42 +1,36 @@
-# api 폴더의 이해
+# CSS
 
-- Next 는 서버입니다.
-- `흔히` FE 는 Next 구현 후 Vercle, AWS 에 배포합니다.
-- `흔히` BE 는 AWS 에 배포합니다.
-- `흔히` DB 는 AWS 에 배포합니다.
+## 인라인 스타일 시트
 
-  - DB는 API 를 제공합니다. requset > DB > Response
-  - Postman, Swagger, Excel
-  - Next 도 서버라서 API 연결이 가능합니다.
+- /src/pages/index.tsx
 
-    - request > DB > Response 가능합니다.
-    - 직접 DB 쿼리도 전달할 수 있습니다.
-
-  - BE 는 API
-
-- api 용도입니다.
-- http://localhost:3000/api/hello
-- https://fakestoreapi.com/
-
-## api 만들어보기
-
-- /src/pages/api/getallgood.ts
-- http://localhost:3000/api/getallgood
-
-```ts
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-
-type Data = {
-  name: string;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const data = await fetch("https://fakestoreapi.com/products");
-  const json = await data.json();
-  res.status(200).json(json);
+```tsx
+export default function Home() {
+  return <h1 style={{ color: "red" }}>홈</h1>;
 }
 ```
+
+## 외부 css 연결 파일 (Next 에서는 page 연결할수 없음)
+
+- /src/pages/index.css
+- `_app.tsx` 이외에는 절대로 사용할 수 없다.
+
+```css
+.title {
+  color: green;
+}
+```
+
+- **오류가 발생함**
+
+```tsx
+import "./index.css";
+
+export default function Home() {
+  return <h1 className="title">홈</h1>;
+}
+```
+
+## Next 에서는 moudle css 만 page 에 연결할 수 있다.
+
+- index.moudle.css 로 파일명 수정
