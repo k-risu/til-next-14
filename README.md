@@ -1,101 +1,42 @@
-# Pages Router
+# api 폴더의 이해
 
-## http://localhost:3000
+- Next 는 서버입니다.
+- `흔히` FE 는 Next 구현 후 Vercle, AWS 에 배포합니다.
+- `흔히` BE 는 AWS 에 배포합니다.
+- `흔히` DB 는 AWS 에 배포합니다.
 
-- /src/pages/index.tsx
+  - DB는 API 를 제공합니다. requset > DB > Response
+  - Postman, Swagger, Excel
+  - Next 도 서버라서 API 연결이 가능합니다.
 
-```tsx
-export default function Home() {
-  return <h1>홈</h1>;
-}
-```
+    - request > DB > Response 가능합니다.
+    - 직접 DB 쿼리도 전달할 수 있습니다.
 
-## http://localhost:3000/search?keyword=아이유
+  - BE 는 API
 
-- 쿼리스트링 처리하기
-- /src/pages/search.tsx
+- api 용도입니다.
+- http://localhost:3000/api/hello
+- https://fakestoreapi.com/
 
-```tsx
-// 앱 라우터버전 import { useRouter } from "next/navigation";
-import { useRouter } from "next/router";
+## api 만들어보기
 
-export default function Page() {
-  const router = useRouter();
-  const { keyword } = router.query;
-  return (
-    <div>
-      검색 <b>{keyword}</b> 페이지
-    </div>
-  );
-}
-```
+- /src/pages/api/getallgood.ts
+- http://localhost:3000/api/getallgood
 
-## http://localhost:3000/good/1
+```ts
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from "next";
 
-- params
-- /src/pages/good/[id].tsx
+type Data = {
+  name: string;
+};
 
-```tsx
-import { useRouter } from "next/router";
-
-export default function Page() {
-  const router = useRouter();
-  const { id } = router.query;
-  return (
-    <div>
-      <b>{id}</b>번 제품정보
-    </div>
-  );
-}
-```
-
-## http://localhost:3000/nopage
-
-- 없는 라우터로 이동시 Not Found 페이지
-- /src/pages/404.tsx
-- 파일명을 지키셔야 합니다.
-
-```tsx
-export default function Page() {
-  return <div>잘못된 주소로 접근하셨습니다.</div>;
-}
-```
-
-# Navigation
-
-## Link 를 이용해서 라우터를 이동하는 주메뉴
-
-- Link 로 연결된 주소는 사전에 서버에서 랜더링으로 자동으로 html 이 만들어져 있습니다.
-- `주메뉴`는 `모든 페이지`에 보여야 한다.
-- `_app.tsx` 최적의 장소가 됩니다.
-
-```tsx
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import Link from "next/link";
-import { useRouter } from "next/router";
-
-export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-  const handleClick = () => {
-    router.push("/");
-  };
-  return (
-    <>
-      <header>
-        <Link href={"/"}>홈</Link>
-        &nbsp;
-        <Link href={"/search?keword=아이유"}>검색 /search?keword=아이유 </Link>
-        &nbsp;
-        <Link href={"/good/1"}>제품상세 /good/1 </Link>
-        &nbsp;
-        <button onClick={handleClick}>홈으로 이동하기</button>
-      </header>
-      <main>
-        <Component {...pageProps} />
-      </main>
-      <footer></footer>
-    </>
-  );
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  const data = await fetch("https://fakestoreapi.com/products");
+  const json = await data.json();
+  res.status(200).json(json);
 }
 ```
