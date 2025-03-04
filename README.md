@@ -613,4 +613,4 @@ export default function Page({
 ## 실제로 Data Fetiching 효과를 보시려면,
 
 - `npm run build`
-- `npm run start` 하고 테스트 진행
+- `npm run start` 하고 배포 진행
