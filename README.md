@@ -773,4 +773,45 @@ export default function Page() {
 }
 ```
 
-# 공통 레이아웃에 다양한 레이아웃 적용하기
+# 공통 레이아웃에 다양한 레이아웃 적용해 보기
+
+- `_app.tsx`
+
+```tsx
+import GlobalLayout from "@/components/global-layout";
+import "@/styles/globals.css";
+import { NextPage } from "next";
+import type { AppProps } from "next/app";
+import { ReactNode } from "react";
+
+// 속성을 추가해준다. 확장도 한다.
+// NextPage 타입을 확장해서 개발자가 추가로 ReactNode 를 1개 추가한 타입
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactNode) => ReactNode;
+};
+
+export default function App({
+  Component,
+  pageProps,
+}: AppProps & {
+  Component: NextPageWithLayout;
+}) {
+  const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
+  return <GlobalLayout>{getLayout(<Component {...pageProps} />)}</GlobalLayout>;
+}
+```
+
+- /src/pages/index.tsx 그리고, /src/pages/search.tsx
+
+```tsx
+// JS 에서는 함수도 객체다.
+// 객체는 속성을 추가할 수 있다.
+Home.getLayout = (page: ReactNode) => {
+  return <SearchLayout>{page}</SearchLayout>;
+};
+----
+
+Page.getLayout = (page: ReactNode) => {
+  return <SearchLayout>{page}</SearchLayout>;
+};
+```
