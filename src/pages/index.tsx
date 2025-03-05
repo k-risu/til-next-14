@@ -19,6 +19,7 @@ export const getStaticProps = async () => {
       allGoods: allGoods,
       randomGoods: randomGoods,
     },
+    revalidate: 60, // 60초 후 다시 생성
   };
 };
 

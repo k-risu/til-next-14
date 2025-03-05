@@ -30,6 +30,7 @@ export async function getStaticProps(context: GetServerSidePropsContext) {
     props: {
       data: data,
     },
+    revalidate: 60, // 60초 후 다시 생성
   };
 }
 
