@@ -7,29 +7,53 @@ import SearchLayout from "@/components/search-layout";
 import { ReactNode, useEffect, useState } from "react";
 import GoodDataType from "@/types";
 import { fetchSearchGood } from "@/lib/fetch-search-good";
+import Head from "next/head";
 
 export default function Page() {
   const [goods, setGoods] = useState<GoodDataType[]>([]);
+
   const router = useRouter();
   const { keyword } = router.query;
+
+  const fetchSearchResult = async () => {
+    const data = await fetchSearchGood(keyword as string);
+    setGoods(data);
+  };
+
   useEffect(() => {
-    const fetchSearchResult = async () => {
-      const data = await fetchSearchGood(keyword as string);
-      setGoods(data);
-    };
+    // 키워드가 바뀌면 실행한다.
     fetchSearchResult();
   }, [keyword]);
+
   return (
-    <div className={styles.container}>
-      <h4>
-        <strong>{keyword}</strong> : 검색 결과
-      </h4>
-      <div>
-        {goods.map((item) => (
-          <GoodItem key={item.id} {...item} />
-        ))}
+    <>
+      <Head>
+        <title>해외 쇼핑몰 {keyword} 검색 서비스</title>
+        <meta
+          name="discription"
+          content={`해외 상품 ${keyword} 검색 서비스입니다.`}
+        />
+        <meta
+          property="og:title"
+          content={`해외 쇼핑몰 ${keyword} 검색 서비스`}
+        />
+        <meta
+          property="og:discription"
+          content={`해외 상품 ${keyword} 검색 서비스입니다.`}
+        />
+        <meta property="og:image" content="/thumbnail.png" />
+      </Head>
+      <div className={styles.container}>
+        <h4>
+          <strong>{keyword}</strong> : 검색 결과
+        </h4>
+        <div>
+          {goods.map((item) => (
+            <GoodItem key={item.id} {...item} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
